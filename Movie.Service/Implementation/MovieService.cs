@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Movie.Core.AppDbContext;
 using Movie.Core.Dtos.Request;
 using Movie.Core.Dtos.Response;
+using Movie.Core.Entity;
 using Movie.Core.Utility;
 using Movie.Service.Interface;
 using Movie.Service.Utility;
@@ -14,14 +15,16 @@ public class MovieService : IMovieService
 {
     private readonly HttpClient _httpClient;
     private readonly OmdConfig _omdConfig;
+    private readonly ApplicationDbContext _dbContext;
 
-    public MovieService(HttpClient httpClient, OmdConfig omdConfig)
+    public MovieService(HttpClient httpClient, OmdConfig omdConfig, ApplicationDbContext dbContext)
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _omdConfig = omdConfig ?? throw new ArgumentNullException(nameof(omdConfig));
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
- 
+
 
     public async Task<ServiceResponse<MovieInfoResponseDto>> SearchMovie(MovieSearchRequestDto model)
     {
@@ -38,6 +41,24 @@ public class MovieService : IMovieService
                 var content = await response.Content.ReadAsStringAsync();
 
                 var result = JsonConvert.DeserializeObject<MovieInfoResponseDto>(content);
+                if (result.Title == null)
+                {
+                    return new ServiceResponse<MovieInfoResponseDto>
+                    {
+                        Message = $"Invalid Movie Name/ Unable to find information on movie title {model.MovieTitle}",
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Success = false
+                    };
+                }
+
+                await _dbContext.SearchQueries.AddAsync(new SearchQuery
+                {
+                    Title = model.MovieTitle,
+                    CreatedAt = DateTime.Now
+                });
+
+                await _dbContext.SaveChangesAsync();
+
 
                 return new ServiceResponse<MovieInfoResponseDto>
                 {
@@ -50,7 +71,7 @@ public class MovieService : IMovieService
 
             return new ServiceResponse<MovieInfoResponseDto>
             {
-              
+
                 Message = "Failed",
                 StatusCode = HttpStatusCode.BadRequest,
                 Success = false
@@ -69,7 +90,7 @@ public class MovieService : IMovieService
         }
     }
 
-   public async Task<ServiceResponse<PaginationResponse<MovieInfoResponseDto>>> LastFiveSearchedMovie()
+    public async Task<ServiceResponse<PaginationResponse<MovieInfoResponseDto>>> LastFiveSearchedMovie()
     {
         throw new NotImplementedException();
     }
