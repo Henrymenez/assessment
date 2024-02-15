@@ -8,5 +8,5 @@ namespace Movie.Service.Interface;
 public interface IMovieService
 {
     Task<ServiceResponse<MovieInfoResponseDto>> SearchMovie(MovieSearchRequestDto model);
-    Task<ServiceResponse<PaginationResponse<MovieInfoResponseDto>>> LastFiveSearchedMovie();
+    Task<ServiceResponse<IEnumerable<string>>> LastFiveSearchedMovie();
 }

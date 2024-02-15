@@ -1,8 +1,8 @@
-﻿using Movie.Core.AppDbContext;
+﻿using Microsoft.EntityFrameworkCore;
+using Movie.Core.AppDbContext;
 using Movie.Core.Dtos.Request;
 using Movie.Core.Dtos.Response;
 using Movie.Core.Entity;
-using Movie.Core.Utility;
 using Movie.Service.Interface;
 using Movie.Service.Utility;
 using Newtonsoft.Json;
@@ -34,13 +34,23 @@ public class MovieService : IMovieService
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient.DefaultRequestHeaders.Add("apikey", $"{_omdConfig.ApiKey}");
-            string apiUrl = $"http://www.omdbapi.com/?t={model.MovieTitle}&apikey={_omdConfig.ApiKey}";
+            string apiUrl = $"{_omdConfig.BaseUrl}/?t={model.MovieTitle}&apikey={_omdConfig.ApiKey}";
             var response = await _httpClient.GetAsync(apiUrl);
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
 
                 var result = JsonConvert.DeserializeObject<MovieInfoResponseDto>(content);
+
+
+                await _dbContext.SearchQueries.AddAsync(new SearchQuery
+                {
+                    Title = model.MovieTitle,
+                    CreatedAt = DateTime.Now
+                });
+
+                await _dbContext.SaveChangesAsync();
+
                 if (result.Title == null)
                 {
                     return new ServiceResponse<MovieInfoResponseDto>
@@ -50,14 +60,6 @@ public class MovieService : IMovieService
                         Success = false
                     };
                 }
-
-                await _dbContext.SearchQueries.AddAsync(new SearchQuery
-                {
-                    Title = model.MovieTitle,
-                    CreatedAt = DateTime.Now
-                });
-
-                await _dbContext.SaveChangesAsync();
 
 
                 return new ServiceResponse<MovieInfoResponseDto>
@@ -90,8 +92,16 @@ public class MovieService : IMovieService
         }
     }
 
-    public async Task<ServiceResponse<PaginationResponse<MovieInfoResponseDto>>> LastFiveSearchedMovie()
+    public async Task<ServiceResponse<IEnumerable<string>>> LastFiveSearchedMovie()
     {
-        throw new NotImplementedException();
+        var movies = await _dbContext.SearchQueries.Where(s => s.IsActive == true).OrderByDescending(d => d.CreatedAt).Take(5).ToListAsync();
+        IEnumerable<string> movieTitles = movies.Select(movie => movie.Title);
+        return new ServiceResponse<IEnumerable<string>>
+        {
+            Data = movieTitles,
+            Message = "Success",
+            StatusCode = HttpStatusCode.OK,
+            Success = true
+        };
     }
 }

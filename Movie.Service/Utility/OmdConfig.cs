@@ -2,7 +2,7 @@
 
 public class OmdConfig
 {
-    public string ApiKey { get; set; } = null!;
-    public string BaseUrl { get; set; } = null!;
-    public string SearchUrl { get; set; } = null!;
+    public virtual string ApiKey { get; set; } = null!;
+    public virtual  string BaseUrl { get; set; } = null!;
+    public virtual string SearchUrl { get; set; } = null!;
 }

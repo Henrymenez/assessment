@@ -31,7 +31,7 @@ public class MovieController : BaseController
     }
 
     [HttpGet("last-five-entries")]
-    [ProducesResponseType(200, Type = typeof(ApiResponse<PaginationResponse<MovieInfoResponseDto>>))]
+    [ProducesResponseType(200, Type = typeof(ApiResponse<IEnumerable<string>>))]
     [ProducesResponseType(404, Type = typeof(ApiResponse))]
     [ProducesResponseType(400, Type = typeof(ApiResponse))]
     public async Task<IActionResult> LastFiveMovies()
