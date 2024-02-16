@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Search</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #141414;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      background-color: #111;
+      width: 100%;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .search-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .search-input {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .movie-card {
+      margin-top: 20px;
+      width: 300px;
+      background-color: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .movie-details {
+      padding: 20px;
+    }
+
+    .last-searches {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .last-search-item {
+      margin: 0 10px;
+      font-size: 14px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Movie Search</h1>
+  </header>
+
+  <div class="search-container">
+    <form action="">
+        <input type="text" id="search" class="search-input" placeholder="Search for a movie...">
+    <button class="search-button"><i class="fa fa-search"></i></button>
+ </form>
+    
+  </div>
+
+  <div class="movie-card">
+    <img class="image" src="https://via.placeholder.com/300" alt="Movie Poster">
+    <div class="movie-details">
+      <h2 class="MovieTitle">Movie Title</h2>
+      <p class="Actors">Actors: Jane Doe</p>
+      <p class="releaseYear">Release Year: 2022</p>
+      <p class="genre">Genre: Action</p>
+      <p class="director">Director: John Doe</p>
+      <p class="Type">Type: Movie</p>
+      <p class="Rated">Rated: 18+</p>
+      <p class="imdbRating">ImdbRating: 8.6</p>
+      <p class="Language">Lang: English</p>
+      <p class="Country">Country: Nigeria</p>
+      <p class="Runtime">Runtime: 1hr 30mins</p>
+      <p class="Plot">Plot: 
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, repudiandae? Maiores rerum repudiandae magnam nesciunt distinctio nemo nulla obcaecati, minima porro corrupti expedita laudantium aliquid aspernatur recusandae sequi. Fugit, praesentium.
+      </p>
+    </div>
+  </div>
+
+  <div class="last-searches">
+    <p class="last-search-item">Last Searches: Movie 1</p>
+    <p class="last-search-item">Movie 2</p>
+    <p class="last-search-item">Movie 3</p>
+    <p class="last-search-item">Movie 4</p>
+    <p class="last-search-item">Movie 5</p>
+  </div>
+  <script src="./script.js">
+        
+  </script>
+</body>
+</html>
